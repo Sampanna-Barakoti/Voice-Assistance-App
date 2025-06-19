@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Container(
-                height: 143,
+                height: 130,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                     "Get inpired and stay creative with your personal assistant powered by DALL-E",
               ),
               FeatureBox(
-                color: Pallete.thirdSuggestionBoxColor,
+                color: const Color.fromARGB(255, 123, 199, 237),
                 headerText: 'Smart Voice Assistant',
                 descriptionText:
                     "Get the best of th both Voice assistant by ChatGPT and DALL-E",
