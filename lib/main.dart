@@ -14,10 +14,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+
       title: 'HEY KIKI',
-      theme: ThemeData.light(
-        useMaterial3: true,
-      ).copyWith(scaffoldBackgroundColor: Pallete.whiteColor),
+      theme: ThemeData.light(useMaterial3: true).copyWith(
+        scaffoldBackgroundColor: Pallete.whiteColor,
+        appBarTheme: AppBarTheme(backgroundColor: Pallete.whiteColor),
+      ),
+
       home: HomePage(),
     );
   }
