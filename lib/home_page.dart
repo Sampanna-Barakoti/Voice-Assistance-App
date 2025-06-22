@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:voice_assistant/feature_box.dart';
+import 'package:voice_assistant/openai_serive.dart';
 import 'package:voice_assistant/pallete.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,6 +13,51 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final speechToText = SpeechToText();
+  String lastword = '';
+  final OpenAIService openAIService = OpenAIService();
+
+  @override
+  void initState() {
+    super.initState();
+    initSpeechToText();
+  }
+
+  Future<void> initSpeechToText() async {
+    await speechToText.initialize();
+    setState(() {});
+    //   bool available = await speechToText.initialize(
+    //     onStatus: (status) => print(' STATUS: $status'),
+    //     onError: (error) => print('ERROR: $error'),
+    //   );
+    //   print(available ? "✅ Plugin initialized" : " Plugin not available");
+    // }
+  }
+
+  /// Each time to start a speech recognition session
+  Future<void> startListening() async {
+    await speechToText.listen(onResult: onSpeechResult);
+    setState(() {});
+  }
+
+  Future<void> stopListening() async {
+    await speechToText.stop();
+    setState(() {});
+  }
+
+  void onSpeechResult(SpeechRecognitionResult result) {
+    print("You said: ${result.recognizedWords}");
+    setState(() {
+      lastword = result.recognizedWords;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    speechToText.stop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,6 +65,7 @@ class _HomePageState extends State<HomePage> {
         title: Text('ALLEN'),
         leading: Icon(Icons.menu),
         centerTitle: true,
+        elevation: 0,
       ),
       body: Column(
         children: [
@@ -110,7 +159,16 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Pallete.firstSuggestionBoxColor,
-        onPressed: () {},
+        onPressed: () async {
+          if (await speechToText.hasPermission && speechToText.isNotListening) {
+            await startListening();
+          } else if (speechToText.isListening) {
+            await openAIService.isArtPromptAPI(lastword);
+            await stopListening();
+          } else {
+            initSpeechToText();
+          }
+        },
         child: Icon(Icons.mic),
       ),
     );
