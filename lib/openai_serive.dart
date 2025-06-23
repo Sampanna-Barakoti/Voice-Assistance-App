@@ -6,6 +6,7 @@ import 'package:voice_assistant/secret.dart';
 class OpenAIService {
   Future<String> isArtPromptAPI(String prompt) async {
     try {
+      print('Prompt sent: $prompt');
       final res = await http.post(
         Uri.parse('https://api.openai.com/v1/chat/completions'),
         headers: {
@@ -13,7 +14,7 @@ class OpenAIService {
           'Authorization': 'Bearer $apikey',
         },
         body: jsonEncode({
-          "model": "gpt-4-turbo",
+          "model": "gpt-3.5-turbo",
           "messages": [
             {
               'role': 'user',
@@ -23,10 +24,10 @@ class OpenAIService {
           ],
         }),
       );
-      print('maing req');
+      print('making req');
       print(res.body);
       if (res.statusCode == 200) {
-        print('wohh');
+        print('geeting response');
       }
       return 'Ai';
     } catch (e) {
